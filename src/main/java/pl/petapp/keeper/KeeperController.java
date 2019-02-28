@@ -1,12 +1,11 @@
 package pl.petapp.keeper;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 import pl.petapp.common.KeeperNotFoundException;
 
 import javax.validation.Valid;
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -16,9 +15,9 @@ public class KeeperController {
     @Autowired
     private KeeperRepository keeperRepository;
 
-    @GetMapping("")
-    public Page<Keeper> findAll(Pageable pageable) {
-        return keeperRepository.findAll(pageable);
+    @GetMapping
+    public List<Keeper> list() {
+        return (List<Keeper>) keeperRepository.findAll();
     }
 
     @GetMapping("/id")
