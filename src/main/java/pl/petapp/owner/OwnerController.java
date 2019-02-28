@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import pl.petapp.common.OwnerNotFoundException;
 
 import javax.validation.Valid;
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -17,8 +18,8 @@ public class OwnerController {
     private OwnerRepository ownerRepository;
 
     @GetMapping("")
-    public Page<Owner> findAll(Pageable pageable) {
-        return ownerRepository.findAll(pageable);
+    public List<Owner> list() {
+        return (List<Owner>) ownerRepository.findAll();
     }
 
     @GetMapping("/id")
