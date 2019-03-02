@@ -1,6 +1,7 @@
 package pl.petapp.pet;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import pl.petapp.common.PetNotFoundException;
 
@@ -29,14 +30,14 @@ public class PetController {
 
     // tworzenie nowego rekordu
     @PostMapping("/pet")
-    //@ResponseStatus(HttpStatus.OK) // status odpowiedzi z serwera - 200 OK
+    @ResponseStatus(HttpStatus.OK) // status odpowiedzi z serwera - 200 OK
     public Pet newPet(@RequestBody Pet newPet) {
         return petRepository.save(newPet);
     }
 
     // update rekordu
     @PutMapping("/pet/{id}")
-    public Pet replacePet(@RequestBody Pet newPet, @PathVariable Long id) {
+     Pet replacePet(@RequestBody Pet newPet, @PathVariable Long id) {
 
         return petRepository.findById(id)
                 .map(pet -> {
