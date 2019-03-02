@@ -46,13 +46,14 @@ public class Owner {
     @Column(name = "SURNAME")
     private String surname;
 
-    @JsonManagedReference
-    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL)
-    private Set<Pet> pets;
 
     @JsonManagedReference
     @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL)
     private Set<Keeper> keepers;
+
+    @JsonManagedReference
+    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL)
+    private Set<Pet> pets;
 
     //Getters and setters
 

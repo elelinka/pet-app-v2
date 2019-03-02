@@ -4,39 +4,54 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import pl.petapp.common.KeeperNotFoundException;
 
-import javax.validation.Valid;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
-@RequestMapping("/keeper")
+//@RequestMapping("/keeper")
 public class KeeperController {
 
     @Autowired
     private KeeperRepository keeperRepository;
 
-    @GetMapping
+    // pobieranie całej listy
+    @GetMapping("/keeper")
     public List<Keeper> list() {
         return (List<Keeper>) keeperRepository.findAll();
     }
 
-    @GetMapping("/id")
-    public Keeper findById(@PathVariable(name = "id") Long id) {
-        Optional<Keeper> keeper = this.keeperRepository.findById(id);
+    // pobieranie konkretnego id
+    @GetMapping("/keeper/{id}")
+    public Keeper one(@PathVariable Long id) {
 
-        if (!keeper.isPresent()) {
-            throw new KeeperNotFoundException("Nie znaleziono opiekuna o podanym id", id);
-        }
-        return keeper.get();
+        return keeperRepository.findById(id)
+                .orElseThrow(() -> new KeeperNotFoundException(id));
     }
 
-    @PostMapping("")
-    public Keeper create(@RequestBody @Valid Keeper keeper) {
-        return keeperRepository.save(keeper);
+    // tworzenie nowego rekordu
+    @PostMapping("/keeper")
+    //@ResponseStatus(HttpStatus.OK) // status odpowiedzi z serwera - 200 OK
+    public Keeper newKeeper(@RequestBody Keeper newKeeper) {
+        return keeperRepository.save(newKeeper);
     }
 
-    @DeleteMapping("")
-    public void delete(@RequestBody Keeper keeper) {
-        keeperRepository.delete(keeper);
+    // update rekordu
+    @PutMapping("/keeper/{id}")
+    public Keeper replaceKeeper(@RequestBody Keeper newKeeper, @PathVariable Long id) {
+
+        return keeperRepository.findById(id)
+                .map(keeper -> {
+                    keeper.setName(newKeeper.getName());
+                    return keeperRepository.save(keeper);
+                })
+                .orElseGet(() -> {
+                    newKeeper.setId(id);
+                    return keeperRepository.save(newKeeper);
+                });
+    }
+
+    // usunięcie
+    @DeleteMapping("/keeper/{id}")
+    public void deleteKeeper(@PathVariable Long id) {
+        keeperRepository.deleteById(id);
     }
 }

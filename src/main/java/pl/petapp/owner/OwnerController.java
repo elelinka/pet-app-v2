@@ -11,34 +11,55 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/owner")
+//@RequestMapping("/owner")
 public class OwnerController {
 
     @Autowired
     private OwnerRepository ownerRepository;
 
-    @GetMapping("")
+    // pobieranie całej listy
+    @GetMapping("/owner")
     public List<Owner> list() {
         return (List<Owner>) ownerRepository.findAll();
     }
 
-    @GetMapping("/id")
-    public Owner findById(@PathVariable(name = "id") Long id) {
-        Optional<Owner> owner = this.ownerRepository.findById(id);
+    // pobieranie konkretnego id
+    @GetMapping("/owner/{id}")
+    public Owner one(@PathVariable Long id) {
 
-        if (!owner.isPresent()) {
-            throw new OwnerNotFoundException("Nie znaleziono właściciela o podanym id", id);
-        }
-        return owner.get();
+        return ownerRepository.findById(id)
+                .orElseThrow(() -> new OwnerNotFoundException(id));
     }
 
-    @PostMapping("")
-    public Owner create(@RequestBody @Valid Owner owner) {
-        return ownerRepository.save(owner);
+    // tworzenie nowego rekordu
+    @PostMapping("/owner")
+    //@ResponseStatus(HttpStatus.OK) // status odpowiedzi z serwera - 200 OK
+    public Owner newOwner(@RequestBody Owner newPet) {
+        return ownerRepository.save(newPet);
     }
 
-    @DeleteMapping("")
-    public void delete(@RequestBody Owner owner) {
-        ownerRepository.delete(owner);
+    // update rekordu
+    @PutMapping("/owner/{id}")
+    public Owner replaceOwner(@RequestBody Owner newOwner, @PathVariable Long id) {
+
+        return ownerRepository.findById(id)
+                .map(owner -> {
+                    owner.setName(newOwner.getName());
+                    owner.setSurname(newOwner.getSurname());
+                    owner.setNickname(newOwner.getNickname());
+                    owner.setPassword(newOwner.getPassword());
+                    owner.setEmail(newOwner.getEmail());
+                    return ownerRepository.save(owner);
+                })
+                .orElseGet(() -> {
+                    newOwner.setId(id);
+                    return ownerRepository.save(newOwner);
+                });
+    }
+
+    // usunięcie
+    @DeleteMapping("/owner/{id}")
+    public void deleteOwner(@PathVariable Long id) {
+        ownerRepository.deleteById(id);
     }
 }

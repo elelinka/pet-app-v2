@@ -1,6 +1,8 @@
 package pl.petapp.pet;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import pl.petapp.common.enums.PetType;
 import pl.petapp.keeper.Keeper;
 import pl.petapp.owner.Owner;
@@ -10,6 +12,7 @@ import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "PET")
+@JsonIdentityInfo(generator= ObjectIdGenerators.PropertyGenerator.class, property="id")
 public class Pet {
     //public Pet(String name, Double wight, Integer age, PetType type, Owner owner) {
 //        this.name = name;

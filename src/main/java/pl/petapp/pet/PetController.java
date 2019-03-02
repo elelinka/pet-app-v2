@@ -1,43 +1,60 @@
 package pl.petapp.pet;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import pl.petapp.common.PetNotFoundException;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
-@RequestMapping("/pet")
+//@RequestMapping("/pet")
 public class PetController {
 
     @Autowired
     private PetRepository petRepository;
 
-    @GetMapping
+    // pobieranie całej listy
+    @GetMapping("/pet")
     public List<Pet> list() {
         return (List<Pet>) petRepository.findAll();
     }
 
-    @GetMapping("/pet/id")
-    public Pet findById(@PathVariable(name = "id") Long id) {
-        Optional<Pet> pet = this.petRepository.findById(id);
+    // pobieranie konkretnego id
+    @GetMapping("/pet/{id}")
+    public Pet one(@PathVariable Long id) {
 
-        if (!pet.isPresent()) {
-            throw new PetNotFoundException("Nie znaleziono zwierzaka o podanym id", id);
-        }
-        return pet.get();
+        return petRepository.findById(id)
+                .orElseThrow(() -> new PetNotFoundException(id));
     }
 
-    @PostMapping()
-    @ResponseStatus(HttpStatus.OK) // status odpowiedzi z serwera - 200 OK
-    public void create(@RequestBody Pet pet) {
-        petRepository.save(pet);
+    // tworzenie nowego rekordu
+    @PostMapping("/pet")
+    //@ResponseStatus(HttpStatus.OK) // status odpowiedzi z serwera - 200 OK
+    public Pet newPet(@RequestBody Pet newPet) {
+        return petRepository.save(newPet);
     }
 
-    @DeleteMapping("")
-    public void delete(@RequestBody Pet pet) {
-        petRepository.delete(pet);
+    // update rekordu
+    @PutMapping("/pet/{id}")
+    public Pet replacePet(@RequestBody Pet newPet, @PathVariable Long id) {
+
+        return petRepository.findById(id)
+                .map(pet -> {
+                    pet.setName(newPet.getName());
+                    pet.setAge(newPet.getAge());
+                    pet.setType(newPet.getType());
+                    pet.setWight(newPet.getWight());
+                    return petRepository.save(pet);
+                })
+                .orElseGet(() -> {
+                    newPet.setId(id);
+                    return petRepository.save(newPet);
+                });
+    }
+
+    // usunięcie
+    @DeleteMapping("/pet/{id}")
+    public void deletePet(@PathVariable Long id) {
+        petRepository.deleteById(id);
     }
 }
