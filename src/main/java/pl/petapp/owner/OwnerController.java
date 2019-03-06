@@ -1,14 +1,10 @@
 package pl.petapp.owner;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 import pl.petapp.common.OwnerNotFoundException;
 
-import javax.validation.Valid;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 //@RequestMapping("/owner")
@@ -44,8 +40,8 @@ public class OwnerController {
 
         return ownerRepository.findById(id)
                 .map(owner -> {
-                    owner.setName(newOwner.getName());
-                    owner.setSurname(newOwner.getSurname());
+                    owner.setFirstname(newOwner.getFirstname());
+                    owner.setLastname(newOwner.getLastname());
                     owner.setNickname(newOwner.getNickname());
                     owner.setPassword(newOwner.getPassword());
                     owner.setEmail(newOwner.getEmail());

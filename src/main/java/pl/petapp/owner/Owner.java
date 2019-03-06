@@ -1,10 +1,12 @@
 package pl.petapp.owner;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import pl.petapp.keeper.Keeper;
 import pl.petapp.pet.Pet;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import java.util.Set;
 
@@ -35,23 +37,26 @@ public class Owner {
     private String password;
 
     @NotNull
+    @Email
     @Column(name = "EMAIL", nullable = false)
     private String email;
 
     @NotNull
-    @Column(name = "NAME")
-    private String name;
+    @Column(name = "FIRSTNAME")
+    private String firstname;
 
     @NotNull
-    @Column(name = "SURNAME")
-    private String surname;
+    @Column(name = "LASTNAME")
+    private String lastname;
 
 
-    @JsonManagedReference
+   // @JsonManagedReference
+    @JsonIgnore
     @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL)
     private Set<Keeper> keepers;
 
-    @JsonManagedReference
+   // @JsonManagedReference
+    @JsonIgnore
     @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL)
     private Set<Pet> pets;
 
@@ -97,20 +102,20 @@ public class Owner {
         this.email = email;
     }
 
-    public String getName() {
-        return name;
+    public String getFirstname() {
+        return firstname;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setFirstname(String name) {
+        this.firstname = name;
     }
 
-    public String getSurname() {
-        return surname;
+    public String getLastname() {
+        return lastname;
     }
 
-    public void setSurname(String surname) {
-        this.surname = surname;
+    public void setLastname(String surname) {
+        this.lastname = surname;
     }
 
     public Set<Keeper> getKeepers() {
@@ -128,8 +133,8 @@ public class Owner {
                 ", nickname='" + nickname + '\'' +
                 ", password='" + password + '\'' +
                 ", email='" + email + '\'' +
-                ", name='" + name + '\'' +
-                ", surname='" + surname + '\'' +
+                ", name='" + firstname + '\'' +
+                ", surname='" + lastname + '\'' +
                 ", pets=" + pets +
                 ", keepers=" + keepers +
                 '}';

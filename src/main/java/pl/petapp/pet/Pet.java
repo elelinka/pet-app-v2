@@ -1,8 +1,6 @@
 package pl.petapp.pet;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.annotation.*;
 import pl.petapp.common.enums.PetType;
 import pl.petapp.keeper.Keeper;
 import pl.petapp.owner.Owner;
@@ -41,12 +39,14 @@ public class Pet {
     @Enumerated(EnumType.STRING)
     private PetType type;
 
-    @JsonBackReference
+   // @JsonBackReference
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "OWNER_ID")
     private Owner owner;
 
-    @JsonBackReference
+   // @JsonManagedReference
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "KEEPER_ID")
     private Keeper keeper;

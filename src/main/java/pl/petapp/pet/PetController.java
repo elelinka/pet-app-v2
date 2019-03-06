@@ -16,6 +16,7 @@ public class PetController {
 
     // pobieranie całej listy
     @GetMapping("/pet")
+    @CrossOrigin(origins = "http://localhost:4200")
     public List<Pet> list() {
         return (List<Pet>) petRepository.findAll();
     }

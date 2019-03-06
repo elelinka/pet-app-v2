@@ -1,6 +1,7 @@
 package pl.petapp.keeper;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import pl.petapp.owner.Owner;
 import pl.petapp.pet.Pet;
@@ -24,12 +25,14 @@ public class Keeper {
     @Column(name = "NAME", nullable = false, updatable = false, unique = true)
     private String name;
 
-    @JsonBackReference
+   // @JsonBackReference
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "OWNER_ID")
     private Owner owner;
 
-    @JsonManagedReference
+   // @JsonManagedReference
+    @JsonIgnore
     @OneToMany(mappedBy = "keeper", cascade = CascadeType.ALL)
     private Set<Pet> pets;
 
