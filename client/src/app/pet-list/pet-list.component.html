@@ -1,0 +1,11 @@
+<mat-card>
+  <mat-card-header>Lista zwierzaków</mat-card-header>
+  <mat-card-content>
+    <mat-list>
+      <mat-list-item *ngFor="let pet of pets">
+        <img mat-list-avatar src="{{car.giphyUrl}}" alt="{{pet.name}}">
+        <h3 mat-line>{{pet.name}}</h3>
+      </mat-list-item>
+    </mat-list>
+  </mat-card-content>
+</mat-card>
